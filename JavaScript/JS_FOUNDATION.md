@@ -17,7 +17,7 @@
 9. [Functions](#9-functions)
 10. [Object-Oriented Programming](#10-object-oriented-programming)
 11. [Prototypes](#11-prototypes)
-12. [DOM Manipulation & Events](#12-dom-manipulation--events)
+12. [DOM Manipulation & Events](#12-dom-manipulation--events) (incl. [BOM](#bom--browser-object-model))
 13. [The Event Loop](#13-the-event-loop)
 14. [Closures](#14-closures)
 15. [`this` Context, bind / call / apply](#15-this-context-bind--call--apply)
@@ -1254,6 +1254,53 @@ Event Bubbling visualised:
        ▼  Event fires on <html>
        ▼  Event fires on document
 ```
+
+### BOM — Browser Object Model
+
+The **DOM** represents the *page content* (the HTML tree). The **BOM** is everything else the browser exposes about itself — the window, the screen, the URL, the browser info. The global `window` object is the top of the BOM, and it's so central that you rarely type `window.` explicitly — `document`, `alert()`, `setTimeout()` are all actually `window.document`, `window.alert()`, etc.
+
+```
+Where BOM fits relative to the DOM:
+
+  window  (the BOM root — represents the browser tab itself)
+     │
+     ├── document      ← the DOM (the page's HTML tree — section 12 above)
+     ├── navigator      ← info about the browser/device
+     ├── location       ← info about the current URL
+     ├── screen         ← info about the user's physical display
+     └── history        ← back/forward navigation
+```
+
+**`navigator`** tells you about the browser and device running the page. Useful for feature detection or showing device-specific behaviour.
+
+```js
+console.log(navigator.userAgent);  // string identifying the browser, e.g. "Mozilla/5.0 ..."
+console.log(navigator.language);   // "en-US" — user's preferred language
+console.log(navigator.onLine);     // true/false — is the device connected to the internet
+```
+
+**`location`** represents the current page's URL. You can read parts of it, or assign to it to navigate the browser to a new page (this reloads the page, like clicking a link).
+
+```js
+console.log(location.href);      // full URL, e.g. "https://chaicode.com/learn?tab=js"
+console.log(location.hostname);  // "chaicode.com"
+console.log(location.pathname);  // "/learn"
+console.log(location.search);    // "?tab=js" — the query string
+
+location.href = "https://chaicode.com"; // navigates the browser to a new page
+location.reload();                       // reloads the current page
+```
+
+**`screen`** describes the user's physical display — not the browser window, the actual monitor. Useful for adapting layouts to very large or very small screens.
+
+```js
+console.log(screen.width);   // full screen width in pixels, e.g. 1920
+console.log(screen.height);  // full screen height in pixels, e.g. 1080
+```
+
+> Quick distinction: `screen` = the physical monitor. `window.innerWidth` / `window.innerHeight` = the visible browser viewport, which is usually smaller than the screen.
+
+The DOM lets you change *what's on the page*; the BOM lets you interact with *the browser around the page*.
 
 ---
 
