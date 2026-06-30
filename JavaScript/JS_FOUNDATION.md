@@ -1226,6 +1226,22 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 ```
 
+> **Why `function` and not an arrow function here?** Inside an event listener, a regular `function` binds `this` to the element the listener is attached to (the same as `event.currentTarget`). This is a convenient, built-in reference to the element that fired the handler. Arrow functions do **not** get their own `this` — they inherit it from the surrounding scope (usually `window` or `undefined`), so you lose that reference.
+
+```js
+// Regular function — `this` is the button that was clicked
+button.addEventListener("click", function () {
+  this.classList.toggle("active");   // ✅ `this` = the button
+});
+
+// Arrow function — `this` is NOT the button
+button.addEventListener("click", () => {
+  this.classList.toggle("active");   // ❌ `this` = outer scope (window), not the button
+});
+```
+
+If you don't rely on `this` (you can always use `event.target` / `event.currentTarget` instead), an arrow function is perfectly fine. But when you want `this` to point at the element, use a regular `function`. See [section 15](#15-this--context) for the full `this` rules.
+
 ### Event Delegation
 
 Imagine a list with 1000 items. Adding a separate click listener to each `<li>` would be slow and memory-heavy. Instead, you add ONE listener to the parent element. When a child is clicked, the event *bubbles up* to the parent, and you check `event.target` to see what was actually clicked.
